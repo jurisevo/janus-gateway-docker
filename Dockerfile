@@ -1,5 +1,7 @@
 FROM debian:bullseye-slim
 
+ARG GIT_BRANCH="master"
+
 RUN apt-get -y update && \
 	apt-get install -y \
 		libavutil-dev \
@@ -48,9 +50,9 @@ RUN cd /tmp && \
 	make && \
 	make install
 
-COPY . /usr/local/src/janus-gateway
-
-RUN cd /usr/local/src/janus-gateway && \
+RUN cd /tmp && \
+	git clone https://github.com/meetecho/janus-gateway.git --branch ${GIT_BRANCH} && \
+	cd janus-gateway && \
 	sh autogen.sh && \
 	./configure --enable-post-processing --prefix=/usr/local && \
 	make && \
